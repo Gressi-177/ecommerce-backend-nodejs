@@ -39,24 +39,28 @@ class AccessService {
 
       if (newShop) {
         //4. Generate key
-        const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
-          modulusLength: 4096,
-          publicKeyEncoding: {
-            type: "pkcs1",
-            format: "pem",
-          },
-          privateKeyEncoding: {
-            type: "pkcs1",
-            format: "pem",
-          },
-        });
+        // const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
+        //   modulusLength: 4096,
+        //   publicKeyEncoding: {
+        //     type: "pkcs1",
+        //     format: "pem",
+        //   },
+        //   privateKeyEncoding: {
+        //     type: "pkcs1",
+        //     format: "pem",
+        //   },
+        // });
+        const publicKey = crypto.randomBytes(64).toString("hex");
+        const privateKey = crypto.randomBytes(64).toString("hex");
 
         //5. Save key to database
-        const publicKeyString = await KeytokenService.createKeyToken({
+        const keyStore = await KeytokenService.createKeyToken({
           userId: newShop._id,
           publicKey,
+          privateKey,
         });
-        if (!publicKeyString) {
+
+        if (!keyStore) {
           return {
             code: "xxx",
             message: "Create key token failed",
@@ -64,12 +68,10 @@ class AccessService {
           };
         }
 
-        const publicKeyObject = crypto.createPublicKey(publicKeyString);
-
         //6. Create token
         const tokens = createTokenPair(
           { userId: newShop._id, email },
-          publicKeyObject,
+          publicKey,
           privateKey,
         );
         if (!tokens) {
@@ -79,6 +81,7 @@ class AccessService {
             status: "error",
           };
         }
+
         return {
           code: 201,
           metadata: {
@@ -92,16 +95,11 @@ class AccessService {
       }
 
       return {
-        code: 400,
-        message: "Invalid shop",
-        status: "error",
+        code: 200,
+        metadata: null,
       };
     } catch (error) {
-      return {
-        code: "xxx",
-        message: error.message,
-        status: "error",
-      };
+      return { code: 500, metadata: null };
     }
   };
 }
