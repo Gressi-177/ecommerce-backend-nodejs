@@ -1,12 +1,30 @@
 @baseUrl = http://localhost:3000/v1/api
 
+@apiKey = 31accc153d2b2fab0229ad747792ba440a08cf06567d1a04a99549f7068f4ee203dc7ba6297f10a5334326e7e979a828d795b4f740bfad87f292f627ec5a5384
 ### Sign up
 POST {{baseUrl}}/shop/signup
 Content-Type: application/json
-x-api-key: 31accc153d2b2fab0229ad747792ba440a08cf06567d1a04a99549f7068f4ee203dc7ba6297f10a5334326e7e979a828d795b4f740bfad87f292f627ec5a5384
+x-api-key: {{apiKey}}
 
 {
     "name": "John Doe",
-    "email": "john3.doe@example.com",
+    "email": "john5.doe@example.com",
     "password": "password"
 }
+
+### Login
+POST {{baseUrl}}/shop/login
+Content-Type: application/json
+x-api-key: {{apiKey}}
+
+{
+    "email": "john5.doe@example.com",
+    "password": "password"
+}
+
+### Logout
+POST {{baseUrl}}/shop/logout
+Content-Type: application/json
+x-api-key: {{apiKey}}
+x-user-id: 69d65a4649782280bd6d8a6c
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWQ2NWE0NjQ5NzgyMjgwYmQ2ZDhhNmMiLCJlbWFpbCI6ImpvaG41LmRvZUBleGFtcGxlLmNvbSIsImlhdCI6MTc3NTY1NzgyMiwiZXhwIjoxNzc1ODMwNjIyfQ.oYYP96imfwmY1uyKXToy9QWsTTxQ9LiKKyPj_W6pxpo

@@ -1,6 +1,5 @@
 "use strict";
 
-const crypto = require("crypto");
 const apikeyModel = require("../models/apikey.model");
 
 const findApiKey = async (key) => {
