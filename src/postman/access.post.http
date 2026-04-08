@@ -1,6 +1,12 @@
 @baseUrl = http://localhost:3000/v1/api
 
 @apiKey = 31accc153d2b2fab0229ad747792ba440a08cf06567d1a04a99549f7068f4ee203dc7ba6297f10a5334326e7e979a828d795b4f740bfad87f292f627ec5a5384
+
+@userId = 69d65a4649782280bd6d8a6c
+
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWQ2NWE0NjQ5NzgyMjgwYmQ2ZDhhNmMiLCJlbWFpbCI6ImpvaG41LmRvZUBleGFtcGxlLmNvbSIsImlhdCI6MTc3NTY2NzAzNiwiZXhwIjoxNzc1ODM5ODM2fQ.2uvZIpSi7tzlnTkCWE7V17HkuWnb4cELdbu9hOns0tk
+
+@refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWQ2NWE0NjQ5NzgyMjgwYmQ2ZDhhNmMiLCJlbWFpbCI6ImpvaG41LmRvZUBleGFtcGxlLmNvbSIsImlhdCI6MTc3NTY2NzAxNywiZXhwIjoxNzc2MjcxODE3fQ.NSy-zHpj3N7zIsIFWm8ieJEerC862gCyBI5NZ4Bsy8k
 ### Sign up
 POST {{baseUrl}}/shop/signup
 Content-Type: application/json
@@ -26,5 +32,16 @@ x-api-key: {{apiKey}}
 POST {{baseUrl}}/shop/logout
 Content-Type: application/json
 x-api-key: {{apiKey}}
-x-user-id: 69d65a4649782280bd6d8a6c
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWQ2NWE0NjQ5NzgyMjgwYmQ2ZDhhNmMiLCJlbWFpbCI6ImpvaG41LmRvZUBleGFtcGxlLmNvbSIsImlhdCI6MTc3NTY1NzgyMiwiZXhwIjoxNzc1ODMwNjIyfQ.oYYP96imfwmY1uyKXToy9QWsTTxQ9LiKKyPj_W6pxpo
+x-user-id: {{userId}}
+Authorization: {{accessToken}}
+
+### Handle refresh token
+POST {{baseUrl}}/shop/handle-refresh-token
+Content-Type: application/json
+x-api-key: {{apiKey}}
+x-user-id: {{userId}}
+Authorization: {{accessToken}}
+
+{
+    "refreshToken": "{{refreshToken}}"
+}

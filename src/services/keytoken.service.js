@@ -31,11 +31,29 @@ class KeytokenService {
   };
 
   static findByUserId = async (userId) => {
-    return await keytokenModel.findOne({ user: new Types.ObjectId(userId) }).lean();
+    return await keytokenModel
+      .findOne({ user: new Types.ObjectId(userId) })
+      .lean();
   };
 
   static removeKeyById = async (id) => {
     return await keytokenModel.findByIdAndDelete(id);
+  };
+
+  static findByRefreshToken = async (refreshToken) => {
+    return await keytokenModel.findOne({ refreshToken });
+  };
+
+  static findByRefreshTokenUsed = async (refreshToken) => {
+    return await keytokenModel
+      .findOne({ refreshTokenUsed: refreshToken })
+      .lean();
+  };
+
+  static deleteKeyById = async (userId) => {
+    return await keytokenModel.findOneAndDelete({
+      user: new Types.ObjectId(userId),
+    });
   };
 }
 

@@ -4,12 +4,13 @@ const shopModel = require("../models/shop.model");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const KeytokenService = require("./keytoken.service");
-const { createTokenPair } = require("../auth/authUtils");
+const { createTokenPair, verifyJWT } = require("../auth/authUtils");
 const { getInfoData } = require("../utils");
 const {
   ConflictRequestError,
   BadRequestError,
   UnauthorizedError,
+  ForbiddenError,
 } = require("../core/error.response");
 const { findByEmail } = require("./shop.service");
 const RoleShop = {
@@ -20,6 +21,43 @@ const RoleShop = {
 };
 
 class AccessService {
+  static handleRefreshToken = async (refreshToken) => {
+    const foundToken =
+      await KeytokenService.findByRefreshTokenUsed(refreshToken);
+    if (foundToken) {
+      const { userId } = verifyJWT(refreshToken, foundToken.privateKey);
+      await KeytokenService.deleteKeyById(userId);
+      throw new ForbiddenError("Something wrong happend !! Please login ");
+    }
+
+    const hoderToken = await KeytokenService.findByRefreshToken(refreshToken);
+    if (!hoderToken)
+      throw new UnauthorizedError("Shop not registered or not logged in");
+
+    const { userId, email } = verifyJWT(refreshToken, hoderToken.privateKey);
+    const foundShop = await findByEmail({ email });
+    if (!foundShop) throw new UnauthorizedError("Shop not found");
+
+    const tokens = createTokenPair(
+      { userId, email },
+      hoderToken.publicKey,
+      hoderToken.privateKey,
+    );
+
+    await hoderToken.updateOne({
+      $set: {
+        refreshToken: tokens.refreshToken,
+      },
+      $addToSet: {
+        refreshTokenUsed: refreshToken,
+      },
+    });
+
+    return {
+      user: { userId, email },
+      tokens,
+    };
+  };
   /*
     Step 1: Tìm user theo email
     Step 2: So sánh password

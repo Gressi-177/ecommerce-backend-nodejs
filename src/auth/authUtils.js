@@ -3,7 +3,7 @@
 const JWT = require("jsonwebtoken");
 const asyncHandler = require("../helpers/asyncHandler");
 const KeytokenService = require("../services/keytoken.service");
-const { NotFoundError } = require("../core/error.response");
+const { NotFoundError, UnauthorizedError } = require("../core/error.response");
 
 const HEADER = {
   API_KEY: "x-api-key",
@@ -58,4 +58,8 @@ const authentication = asyncHandler(async (req, res, next) => {
   }
 });
 
-module.exports = { createTokenPair, authentication };
+const verifyJWT = (token, keySecret) => {
+  return JWT.verify(token, keySecret);
+};
+
+module.exports = { createTokenPair, authentication, verifyJWT };
