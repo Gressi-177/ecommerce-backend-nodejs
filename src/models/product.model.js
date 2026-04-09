@@ -74,7 +74,8 @@ const productSchema = new Schema(
     collection: COLLECTION_NAME,
   },
 );
-
+// Create index for product_name
+productSchema.index({ product_name: "text", product_description: "text" });
 // Document pre-save middleware
 productSchema.pre("save", function () {
   this.product_slug = slugify(String(this.product_name || ""), { lower: true });

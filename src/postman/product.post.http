@@ -26,3 +26,64 @@ Authorization: {{accessToken}}
         "material": "Material 1"
     }
 }
+
+### Update product
+PATCH {{baseUrl}}/product/update/69d76d1f95faf7930ed956f0
+Content-Type: application/json
+x-api-key: {{apiKey}}
+x-client-id: {{userId}}
+Authorization: {{accessToken}}
+
+{
+    "product_type": "Clothing",
+   "product_attributes": {
+      "brand": "Brand 2",
+      "size": "Size 2"
+    }
+}
+
+### Get all drafts for shop
+GET {{baseUrl}}/product/drafts
+Content-Type: application/json
+x-api-key: {{apiKey}}
+x-client-id: {{userId}}
+Authorization: {{accessToken}}
+
+
+### Get all published products for shop
+GET {{baseUrl}}/product/published
+Content-Type: application/json
+x-api-key: {{apiKey}}
+x-client-id: {{userId}}
+Authorization: {{accessToken}}
+
+### Publish product
+PATCH {{baseUrl}}/product/publish/69d76d1f95faf7930ed956f0
+Content-Type: application/json
+x-api-key: {{apiKey}}
+x-client-id: {{userId}}
+Authorization: {{accessToken}}
+
+### Unpublish product
+PATCH {{baseUrl}}/product/unpublish/69d76d1f95faf7930ed956f0
+Content-Type: application/json
+x-api-key: {{apiKey}}
+x-client-id: {{userId}}
+Authorization: {{accessToken}}
+
+### Get list search products
+GET {{baseUrl}}/product/search/ve
+Content-Type: application/json
+x-api-key: {{apiKey}}
+
+### Get list products
+GET {{baseUrl}}/product?limit=10&page=1&sort=ctime
+Content-Type: application/json
+x-api-key: {{apiKey}}
+
+### Get product detail
+GET {{baseUrl}}/product/69d76d1f95faf7930ed956f0
+Content-Type: application/json
+x-api-key: {{apiKey}}
+
+
