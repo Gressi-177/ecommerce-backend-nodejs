@@ -14,10 +14,11 @@ x-client-id: {{userId}}
 Authorization: {{accessToken}}
 
 {
-    "product_name": "Product 1",
+    "product_name": "Băng quấn bảo vệ cổ tay",
     "product_thumb": "https://example.com/product-1.jpg",
-    "product_price": 100,
-    "product_sold": 0,
+    "product_description": "Băng quấn bảo vệ cổ tay là một sản phẩm được sử dụng để bảo vệ cổ tay khi thực hiện các hoạt động vận động",
+    "product_price": 1000000,
+    "product_quantity": 100,
     "product_type": "Clothing",
     "product_attributes": {
         "brand": "Brand 1",
