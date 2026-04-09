@@ -8,7 +8,8 @@ const { NotFoundError, UnauthorizedError } = require("../core/error.response");
 const HEADER = {
   API_KEY: "x-api-key",
   AUTHORIZATION: "authorization",
-  USER_ID: "x-user-id",
+  CLIENT_ID: "x-client-id",
+  REFRESH_TOKEN: "x-refresh-token",
 };
 
 const createTokenPair = (payload, publicKey, privateKey) => {
@@ -38,11 +39,26 @@ const createTokenPair = (payload, publicKey, privateKey) => {
 5. gán decoded vào req.user
 */
 const authentication = asyncHandler(async (req, res, next) => {
-  const userId = req.headers[HEADER.USER_ID];
+  const userId = req.headers[HEADER.CLIENT_ID];
   if (!userId) throw new UnauthorizedError("Missing userId");
 
   const keyStore = await KeytokenService.findByUserId(userId);
   if (!keyStore) throw new NotFoundError("Key store not found");
+
+  if (req.headers[HEADER.REFRESH_TOKEN]) {
+    try {
+      const refreshToken = req.headers[HEADER.REFRESH_TOKEN];
+      const decoded = verifyJWT(refreshToken, keyStore.privateKey);
+      if (decoded.userId !== userId)
+        throw new UnauthorizedError("Invalid userId in token");
+      req.keyStore = keyStore;
+      req.user = decoded;
+      req.refreshToken = refreshToken;
+      return next();
+    } catch (error) {
+      throw new UnauthorizedError("Invalid refresh token");
+    }
+  }
 
   const accessToken = req.headers[HEADER.AUTHORIZATION];
   if (!accessToken) throw new UnauthorizedError("Missing accessToken");
@@ -52,6 +68,7 @@ const authentication = asyncHandler(async (req, res, next) => {
     if (decoded.userId !== userId)
       throw new UnauthorizedError("Invalid userId in token");
     req.keyStore = keyStore;
+    req.user = decoded;
     return next();
   } catch (error) {
     throw error;

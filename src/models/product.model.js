@@ -1,11 +1,11 @@
 "use strict";
 
-const mongoose = require("mongoose");
+const { Schema, model } = require("mongoose");
 
 const DOCUMENT_NAME = "Product";
 const COLLECTION_NAME = "products";
 
-const productSchema = new mongoose.Schema(
+const productSchema = new Schema(
   {
     product_name: {
       type: String,
@@ -32,6 +32,10 @@ const productSchema = new mongoose.Schema(
       type: Schema.Types.ObjectId,
       ref: "Shop",
     },
+    product_attributes: {
+      type: Schema.Types.Mixed,
+      default: {},
+    },
   },
   {
     timestamps: true,
@@ -51,6 +55,10 @@ const clothingSchema = new Schema(
     material: {
       type: String,
       trim: true,
+    },
+    product_shop: {
+      type: Schema.Types.ObjectId,
+      ref: "Shop",
     },
   },
   {
@@ -72,6 +80,10 @@ const electronicSchema = new Schema(
       type: String,
       trim: true,
     },
+    product_shop: {
+      type: Schema.Types.ObjectId,
+      ref: "Shop",
+    },
   },
   {
     timestamps: true,
@@ -80,7 +92,7 @@ const electronicSchema = new Schema(
 );
 
 module.exports = {
-  clothing: model(DOCUMENT_NAME, clothingSchema),
-  electronic: model(DOCUMENT_NAME, electronicSchema),
+  clothing: model("Clothing", clothingSchema),
+  electronic: model("Electronic", electronicSchema),
   product: model(DOCUMENT_NAME, productSchema),
 };

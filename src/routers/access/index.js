@@ -6,15 +6,15 @@ const router = express.Router();
 const asyncHandler = require("../../helpers/asyncHandler");
 const { authentication } = require("../../auth/authUtils");
 
-router.post("/shop/signup", asyncHandler(accessController.signUp));
-router.post("/shop/login", asyncHandler(accessController.login));
+router.post("/signup", asyncHandler(accessController.signUp));
+router.post("/login", asyncHandler(accessController.login));
 
 // Authentication
 router.use(authentication);
 //////////
-router.post("/shop/logout", asyncHandler(accessController.logout));
+router.post("/logout", asyncHandler(accessController.logout));
 router.post(
-  "/shop/handle-refresh-token",
+  "/handle-refresh-token",
   asyncHandler(accessController.handleRefreshToken),
 );
 

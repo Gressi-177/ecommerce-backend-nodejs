@@ -4,9 +4,9 @@
 
 @userId = 69d65a4649782280bd6d8a6c
 
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWQ2NWE0NjQ5NzgyMjgwYmQ2ZDhhNmMiLCJlbWFpbCI6ImpvaG41LmRvZUBleGFtcGxlLmNvbSIsImlhdCI6MTc3NTY2NzAzNiwiZXhwIjoxNzc1ODM5ODM2fQ.2uvZIpSi7tzlnTkCWE7V17HkuWnb4cELdbu9hOns0tk
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWQ2NWE0NjQ5NzgyMjgwYmQ2ZDhhNmMiLCJlbWFpbCI6ImpvaG41LmRvZUBleGFtcGxlLmNvbSIsImlhdCI6MTc3NTcyMzM1NywiZXhwIjoxNzc1ODk2MTU3fQ.yohzugSaIU7gAyOfsxekKSowa20g0VGMEG8ODY8iUCw
 
-@refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWQ2NWE0NjQ5NzgyMjgwYmQ2ZDhhNmMiLCJlbWFpbCI6ImpvaG41LmRvZUBleGFtcGxlLmNvbSIsImlhdCI6MTc3NTY2NzAxNywiZXhwIjoxNzc2MjcxODE3fQ.NSy-zHpj3N7zIsIFWm8ieJEerC862gCyBI5NZ4Bsy8k
+@refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWQ2NWE0NjQ5NzgyMjgwYmQ2ZDhhNmMiLCJlbWFpbCI6ImpvaG41LmRvZUBleGFtcGxlLmNvbSIsImlhdCI6MTc3NTcyMzM1NywiZXhwIjoxNzc2MzI4MTU3fQ.znn7grPgNWdpsHcD4Ngz-pYbGh3Ya3qmpltnyGhiZC0
 ### Sign up
 POST {{baseUrl}}/shop/signup
 Content-Type: application/json
@@ -32,16 +32,13 @@ x-api-key: {{apiKey}}
 POST {{baseUrl}}/shop/logout
 Content-Type: application/json
 x-api-key: {{apiKey}}
-x-user-id: {{userId}}
+x-client-id: {{userId}}
 Authorization: {{accessToken}}
 
 ### Handle refresh token
 POST {{baseUrl}}/shop/handle-refresh-token
 Content-Type: application/json
 x-api-key: {{apiKey}}
-x-user-id: {{userId}}
+x-client-id: {{userId}}
 Authorization: {{accessToken}}
-
-{
-    "refreshToken": "{{refreshToken}}"
-}
+x-refresh-token: {{refreshToken}}

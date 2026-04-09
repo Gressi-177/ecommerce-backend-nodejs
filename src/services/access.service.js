@@ -4,8 +4,9 @@ const shopModel = require("../models/shop.model");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const KeytokenService = require("./keytoken.service");
-const { createTokenPair, verifyJWT } = require("../auth/authUtils");
+const { createTokenPair } = require("../auth/authUtils");
 const { getInfoData } = require("../utils");
+const keyStoreService = require("./keytoken.service");
 const {
   ConflictRequestError,
   BadRequestError,
@@ -21,30 +22,27 @@ const RoleShop = {
 };
 
 class AccessService {
-  static handleRefreshToken = async (refreshToken) => {
-    const foundToken =
-      await KeytokenService.findByRefreshTokenUsed(refreshToken);
-    if (foundToken) {
-      const { userId } = verifyJWT(refreshToken, foundToken.privateKey);
-      await KeytokenService.deleteKeyById(userId);
+  static handleRefreshToken = async ({ keyStore, refreshToken, user }) => {
+    const { userId, email } = user;
+
+    if (keyStore.refreshTokenUsed.includes(refreshToken)) {
+      await keyStoreService.deleteKeyById(userId);
       throw new ForbiddenError("Something wrong happend !! Please login ");
     }
 
-    const hoderToken = await KeytokenService.findByRefreshToken(refreshToken);
-    if (!hoderToken)
-      throw new UnauthorizedError("Shop not registered or not logged in");
+    if (keyStore.refreshToken !== refreshToken)
+      throw new UnauthorizedError("Invalid refresh token");
 
-    const { userId, email } = verifyJWT(refreshToken, hoderToken.privateKey);
     const foundShop = await findByEmail({ email });
     if (!foundShop) throw new UnauthorizedError("Shop not found");
 
     const tokens = createTokenPair(
       { userId, email },
-      hoderToken.publicKey,
-      hoderToken.privateKey,
+      keyStore.publicKey,
+      keyStore.privateKey,
     );
 
-    await hoderToken.updateOne({
+    await keyStore.updateOne({
       $set: {
         refreshToken: tokens.refreshToken,
       },
@@ -54,7 +52,7 @@ class AccessService {
     });
 
     return {
-      user: { userId, email },
+      user,
       tokens,
     };
   };

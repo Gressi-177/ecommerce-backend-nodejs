@@ -1,0 +1,27 @@
+@baseUrl = http://localhost:3000/v1/api
+
+@apiKey = 31accc153d2b2fab0229ad747792ba440a08cf06567d1a04a99549f7068f4ee203dc7ba6297f10a5334326e7e979a828d795b4f740bfad87f292f627ec5a5384
+
+@userId = 69d65a4649782280bd6d8a6c
+
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWQ2NWE0NjQ5NzgyMjgwYmQ2ZDhhNmMiLCJlbWFpbCI6ImpvaG41LmRvZUBleGFtcGxlLmNvbSIsImlhdCI6MTc3NTcyMTQwMywiZXhwIjoxNzc1ODk0MjAzfQ.CRF2zKxlWijemtnp8y7xKrqm7Bu_38_JqjKv4GYSHlI
+
+### Create product
+POST {{baseUrl}}/product/create
+Content-Type: application/json
+x-api-key: {{apiKey}}
+x-client-id: {{userId}}
+Authorization: {{accessToken}}
+
+{
+    "product_name": "Product 1",
+    "product_thumb": "https://example.com/product-1.jpg",
+    "product_price": 100,
+    "product_sold": 0,
+    "product_type": "Clothing",
+    "product_attributes": {
+        "brand": "Brand 1",
+        "size": "Size 1",
+        "material": "Material 1"
+    }
+}
