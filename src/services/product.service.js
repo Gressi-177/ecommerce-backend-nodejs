@@ -2,6 +2,7 @@
 
 const { BadRequestError } = require("../core/error.response");
 const { product, clothing, electronic } = require("../models/product.model");
+const { createInventory } = require("../models/repositories/inventory.repo");
 const {
   publishProductByShop,
   queryProduct,
@@ -92,7 +93,7 @@ class Product {
     product_name,
     product_thumb,
     product_price,
-    product_sold,
+    product_quantity,
     product_type,
     product_shop,
     product_attributes,
@@ -100,17 +101,30 @@ class Product {
     this.product_name = product_name;
     this.product_thumb = product_thumb;
     this.product_price = product_price;
-    this.product_sold = product_sold;
+    this.product_quantity = product_quantity;
     this.product_type = product_type;
     this.product_shop = product_shop;
     this.product_attributes = product_attributes;
   }
 
   async createProduct(product_id) {
-    return await product.create({
+    const newProduct = await product.create({
       ...this,
       _id: product_id,
     });
+
+    if (newProduct) {
+      await createInventory({
+        product_id: newProduct._id,
+        shop_id: newProduct.product_shop,
+        stock: newProduct.product_quantity,
+        location: "unknown",
+      });
+
+      return newProduct;
+    }
+
+    return null;
   }
 
   async updateProduct(product_id, payload) {

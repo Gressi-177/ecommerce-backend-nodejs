@@ -22,10 +22,9 @@ const productSchema = new Schema(
       type: Number,
       required: true,
     },
-    product_sold: {
+    product_quantity: {
       type: Number,
       required: true,
-      default: 0,
     },
     product_type: {
       type: String,
