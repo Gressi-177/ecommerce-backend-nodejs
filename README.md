@@ -8,7 +8,7 @@ Built with Node.js, Express 5, MongoDB (Mongoose), and JWT authentication.
 
 - **API-key gate** — every request must carry a valid `x-api-key`, and keys carry permissions (`0000`, `1111`, `2222`) checked before routing.
 - **Shop accounts** — registration and login with bcrypt password hashing. Each shop has a role list, ready for staff accounts.
-- **JWT access + refresh tokens** — 2-day access token, 7-day refresh token, signed with a per-login key pair stored server-side.
+- **JWT access + refresh tokens** — 2-day access token, 7-day refresh token, signed with per-login secrets stored server-side.
 - **Refresh-token rotation with reuse detection** — a refresh token can be used once. Replaying an old one revokes the shop's key store and forces a new login.
 - **Product subtypes via factory + registry** — shared product fields live in one collection; type-specific fields live in their own collections (`Clothing`, `Electronic`). Adding a type means adding a class and one registration line, not editing the service.
 - **Draft/publish lifecycle** — new products start as drafts. Public listing and search only see published products.
@@ -62,9 +62,9 @@ The code is split into routes, controllers, services, and repositories so the bu
 | `authorization` | authenticated requests | access token |
 | `x-refresh-token` | refresh endpoint | refresh token |
 
-Login generates a key pair, stores it in `keytokens` with the refresh token, and returns both tokens. Protected routes verify the access token with the stored public key and check that the token's `userId` matches `x-client-id`.
+Login generates two random secrets, stores them in `keytokens` with the refresh token, and returns both tokens. Protected routes verify the access token with the access secret and check that the token's `userId` matches `x-client-id`.
 
-On refresh, the token is verified with the private key, compared with the stored refresh token, then rotated: the old token is pushed to `refreshTokenUsed` and a new pair is issued. If a token from `refreshTokenUsed` is presented again, the key store is deleted — the session is treated as compromised.
+On refresh, the token is verified with the refresh secret, compared with the stored refresh token, then rotated: the old token is pushed to `refreshTokenUsed` and a new pair is issued. If a token from `refreshTokenUsed` is presented again, the key store is deleted — the session is treated as compromised.
 
 ## Data model
 
@@ -76,7 +76,7 @@ On refresh, the token is verified with the private key, compared with the stored
 | `electronics` | electronics-specific attributes: manufacturer, model, color |
 | `inventories` | stock per product and shop, plus a reservation list |
 | `discounts` | code, type, value, date window, usage limits, applicable products |
-| `keytokens` | per-shop public/private key pair, current and used refresh tokens |
+| `keytokens` | per-shop token signing secrets, current and used refresh tokens |
 | `apiKeys` | client keys and their permission sets |
 
 ## API
